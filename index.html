@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en-GB">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>HF Training | Learning workspace</title><link rel="stylesheet" href="/static/styles.css"><script type="module" src="/static/app.js"></script></head>
+<body>
+<div id="login" class="login-layout">
+ <section class="brand-panel"><div class="brand"><span class="monogram">HF</span><span>TRAINING</span></div><div><p class="eyebrow">HAIRFORCE1 TRAINING ACADEMY</p><h1>Your craft.<br>Your progress.<br>Your future.</h1><p class="intro">A home for your learning, practical work and the next step in your barbering career.</p></div><p class="brand-footer">LEARN · PRACTISE · ACHIEVE</p></section>
+ <section class="login-panel"><div class="login-card"><span class="pill">LEARNING WORKSPACE</span><h2>Welcome back.</h2><p>Sign in to continue your training.</p><form id="login-form"><label>Email address<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label><button class="primary">Sign in <span aria-hidden="true">→</span></button></form><p id="login-error" class="error" role="alert"></p><p class="small">Need access or a password reset? Contact your academy administrator.</p></div></section>
+</div>
+<div id="workspace" class="workspace" hidden>
+ <aside class="sidebar"><div class="brand"><span class="monogram">HF</span><span>TRAINING</span></div><p class="nav-caption">YOUR WORKSPACE</p><nav id="nav" aria-label="Main navigation"></nav><div class="sidebar-bottom"><strong>Hairforce1</strong><span>Training Academy</span><span class="small">Learn with purpose.</span></div></aside>
+ <div class="main-shell"><header class="topbar"><span id="breadcrumb">Learning workspace</span><div class="identity"><span id="identity"></span><button id="logout" class="quiet">Sign out</button></div></header><main><div id="learner-picker"></div><div id="content"></div></main></div>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="modal"><div class="dialog-heading"><h2 id="modal-title"></h2><button id="close-modal" class="quiet" aria-label="Close dialog">Close ×</button></div><div id="modal-body"></div></dialog>
+</body></html>

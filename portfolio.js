@@ -1,0 +1,37 @@
+import {state,$,api,esc,label,badge,date,area,field,formData,bindForm,modal,toast,wireButtons} from './ui.js';
+
+const fields=[['client_reference','Client reference (use a code, not a full name)'],['service_date','Service date'],['objectives','Service objectives — what was agreed?'],['analysis','Hair and scalp analysis'],['practical_range','Practical range notes (hair length, texture, techniques and look achieved)'],['tools','Products, tools and techniques'],['health_safety','Health, safety and preparation'],['communication','Behaviours and communication'],['service','Service carried out'],['time_taken','Time taken'],['functional_skills','English and maths used'],['went_well','What went well?'],['improve','What will you improve next time?'],['aftercare','Aftercare advice']];
+
+export async function openPortfolio(id,refresh){
+ const p=await api(`/api/portfolio/${id}`);
+ const unit=p.unit;
+ const editable=state.user.role==='learner'&&['draft','returned'].includes(p.status);
+ const assessor=['admin','assessor'].includes(state.user.role);
+ const iqa=['admin','iqa'].includes(state.user.role);
+ modal(`${unit.ref} · ${unit.title}`,`
+ <p class="muted">${esc(unit.aim)}</p><p>${badge(p.status)} <span class="small">Record version ${p.version}</span></p>
+ <div class="notice">Use client reference codes. Upload client images only when the academy's consent requirements have been met.</div>
+ <form id="portfolio-form"><div class="form-grid">${fields.map(([key,name])=>`<div class="${['client_reference','service_date','time_taken'].includes(key)?'':'full'}">${['client_reference','service_date','time_taken'].includes(key)?field(key,name,key==='service_date'?'date':'text',p.fields[key]||'',false):area(key,name,p.fields[key]||'',false)}</div>`).join('')}</div>
+ <h3>Practical range recorded for this service</h3><p class="small">Academy descriptors, not a complete awarding-body range checklist. Record what you worked on.</p>${Object.entries(p.range_options).map(([key,options])=>`<fieldset><legend>${esc(label(key))}</legend><div class="criteria">${options.map(value=>`<label><input type="checkbox" data-range="${key}" value="${esc(value)}" ${(p.fields.ranges?.[key]||[]).includes(value)?'checked':''}>${esc(value)}</label>`).join('')}</div></fieldset>`).join('')}<h3>Unit criteria checklist</h3><p class="small">These ticks record your reflection. Your assessor makes the assessment decision.</p><div class="criteria">${JSON.parse(unit.criteria).map((c,i)=>`<label><input type="checkbox" name="criterion" value="${i}" ${(p.fields.criteria||[]).includes(i)?'checked':''}>${esc(c)}</label>`).join('')}</div>
+ ${editable?'<div class="actions"><button class="quiet" name="action" value="save">Save draft</button><button class="primary" name="action" value="submit">Save & submit for assessment</button></div>':'<p class="notice">This evidence is read only. Submitted work must be returned by the assessor before the learner can change it.</p>'}</form>
+ <h3>Evidence files</h3><ul class="file-list">${p.evidence.map(f=>`<li><a href="/api/files/${f.id}">${esc(f.filename)}</a><small>${Math.ceil(f.size/1024)} KB · ${date(f.created)}</small></li>`).join('')||'<li class="small">No evidence attached yet.</li>'}</ul>
+ ${editable?'<form id="upload-form"><label>Add evidence — PDF, JPG or PNG, up to 10 MB<input name="file" type="file" accept=".pdf,.jpg,.jpeg,.png" required></label><p class="small">Save your draft before uploading a file.</p><button>Upload file</button></form>':''}
+ ${assessor&&['submitted','iqa_action','assessed'].includes(p.status)?`<hr><h3>Assessor decision</h3><form id="assessment-form"><label>Outcome<select name="outcome">${p.status!=='assessed'?'<option value="assessed">Assessed — evidence reviewed</option>':''}<option value="returned">Return to learner — further work needed</option></select></label><h4>Criteria demonstrated in this service</h4><div class="criteria">${JSON.parse(unit.criteria).map((c,i)=>`<label><input type="checkbox" name="assessor-criterion" value="${i}">${esc(c)}</label>`).join('')}</div><p class="small">Tick only what the evidence demonstrates. This assesses this service record; it does not award the whole unit.</p>${area('feedback','Feedback, assessment rationale and next steps')}<button class="primary">Record assessment</button></form>`:''}
+ ${iqa&&p.status==='assessed'?`<hr><h3>IQA sampling</h3><p class="small">The IQA must be someone other than the recorded assessor.</p><form id="iqa-form"><label>Sampling outcome<select name="outcome"><option value="verified">Verified</option><option value="iqa_action">Assessor action required</option></select></label>${area('feedback','Sampling notes and actions')}<button class="primary">Record IQA check</button></form>`:''}
+ ${['learner','admin','assessor'].includes(state.user.role)&&!['draft','returned'].includes(p.status)?'<hr><button id="new-record">Add another practical service for this unit</button>':''}<hr><h3>Submission & decision history</h3>${p.decisions.map(d=>`<article class="timeline"><strong>${esc(label(d.kind))} · ${esc(label(d.outcome))}</strong><p class="prose">${esc(d.feedback)}</p>${d.kind==='assessment'?`<p class="small">Assessor-confirmed criteria: ${JSON.parse(d.checks||'[]').map(i=>esc(JSON.parse(unit.criteria)[i])).join('; ')||'None'}</p>`:''}<span class="small">${esc(d.name)} · ${date(d.created)} · version ${d.version}</span></article>`).join('')||'<p class="small">No decisions recorded yet.</p>'}`);
+ if(!editable)$('#portfolio-form').querySelectorAll('input,textarea').forEach(el=>el.disabled=true);
+ async function updated(message){toast(message);await refresh();await openPortfolio(id,refresh);}
+ bindForm('portfolio-form',async(form,button)=>{
+  const data=formData(form);data.version=p.version;data.ranges=Object.fromEntries(Object.keys(p.range_options).map(k=>[k,[...form.querySelectorAll(`[data-range="${k}"]:checked`)].map(el=>el.value)]));data.criteria=[...form.querySelectorAll('[name=criterion]:checked')].map(el=>Number(el.value));
+  const saved=await api(`/api/portfolio/${id}/save`,'POST',data);
+  p.version=saved.version;
+  if(button.value==='submit')await api(`/api/portfolio/${id}/submit`,'POST',{version:p.version});
+  await updated(button.value==='submit'?'Work submitted to your assessor.':'Draft saved.');
+ });
+ bindForm('upload-form',async form=>{const data=new FormData(form);data.append('version',p.version);await api(`/api/portfolio/${id}/files`,'POST',data);await updated('Evidence file uploaded.');});
+ wireButtons('#new-record',async()=>{const result=await api(`/api/portfolio/${id}/new-record`,'POST',{});await refresh();await openPortfolio(result.id,refresh);});
+ for(const kind of ['assessment','iqa'])bindForm(`${kind}-form`,async form=>{await api(`/api/portfolio/${id}/decision`,'POST',{...formData(form),kind,version:p.version,checks:[...form.querySelectorAll('[name=assessor-criterion]:checked')].map(el=>Number(el.value))});await updated('Decision recorded.');});
+}
+
+export function wirePortfolio(refresh){wireButtons('[data-portfolio]',b=>openPortfolio(Number(b.dataset.portfolio),refresh));}
+export function unitRows(units){return units.map(u=>`<div class="unit-row"><span class="unit-icon">${esc(u.ref.replace('Unit ',''))}</span><div class="unit-copy"><strong>${esc(u.title)}</strong><p>${esc(u.course)} · Service record #${u.id}</p></div>${badge(u.status)}<button class="quiet" data-portfolio="${u.id}">Open</button></div>`).join('');}

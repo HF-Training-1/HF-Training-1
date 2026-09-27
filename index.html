@@ -1,13 +1,33 @@
 <!doctype html>
 <html lang="en-GB">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>HF Training | Learning workspace</title><link rel="stylesheet" href="/static/styles.css"><script type="module" src="/static/app.js"></script></head>
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="description" content="HF Training — Hairforce1 barbering learning workspace demonstration.">
+ <title>HF Training | Academy demo</title>
+ <link rel="icon" href="data:,">
+ <link rel="stylesheet" href="./hf-demo/styles.css?v=4">
+ <script type="module" src="./hf-demo/app.js?v=4"></script>
+</head>
 <body>
+<div class="demo-strip"><strong>TESTING VERSION</strong><span>Fictional records only · saved in this browser · no student data</span><button id="reset-demo" type="button">Reset demo</button></div>
+<noscript><p class="notice">Turn on JavaScript in Chrome to use this demonstration.</p></noscript>
 <div id="login" class="login-layout">
- <section class="brand-panel"><div class="brand"><span class="monogram">HF</span><span>TRAINING</span></div><div><p class="eyebrow">HAIRFORCE1 TRAINING ACADEMY</p><h1>Your craft.<br>Your progress.<br>Your future.</h1><p class="intro">A home for your learning, practical work and the next step in your barbering career.</p></div><p class="brand-footer">LEARN · PRACTISE · ACHIEVE</p></section>
- <section class="login-panel"><div class="login-card"><span class="pill">LEARNING WORKSPACE</span><h2>Welcome back.</h2><p>Sign in to continue your training.</p><form id="login-form"><label>Email address<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label><button class="primary">Sign in <span aria-hidden="true">→</span></button></form><p id="login-error" class="error" role="alert"></p><p class="small">Need access or a password reset? Contact your academy administrator.</p></div></section>
+ <section class="brand-panel">
+  <div class="brand"><span class="monogram">HF</span><span>TRAINING<span class="brand-sub">HAIRFORCE1 TRAINING ACADEMY</span></span></div>
+  <div class="welcome-copy"><p class="eyebrow">BUILT FOR BARBERING</p><h1>Your academy.<br>All in one place.</h1><p class="intro">Practical training, learner portfolios and assessment — connected.</p>
+   <div class="login-feature"><span>01</span><div><strong>Record practical work</strong><p>Consultation, service notes and range checkboxes.</p></div></div>
+   <div class="login-feature"><span>02</span><div><strong>Review every step</strong><p>Learner reflections, assessor feedback and IQA.</p></div></div>
+   <div class="login-feature"><span>03</span><div><strong>Keep courses separate</strong><p>VRQ, apprenticeship and VTCT course areas.</p></div></div>
+  </div><p class="brand-footer">HAIRFORCE1 · BARBERING EDUCATION</p>
+ </section>
+ <section class="login-panel"><div class="login-card"><span class="pill">GITHUB PAGES DEMO</span><h2>Welcome to<br>HF Training.</h2><p>Choose a role to explore the academy.</p>
+  <div class="role-choices" aria-label="Choose a demo role"><button type="button" data-demo-role="admin">Administrator</button><button type="button" data-demo-role="learner">VRQ student</button><button type="button" data-demo-role="assessor">Assessor</button><button type="button" data-demo-role="iqa">IQA</button><button type="button" data-demo-role="apprentice">Apprentice</button></div>
+  <form id="login-form"><label>Demo email<input name="email" type="email" autocomplete="off" value="admin@demo.invalid" required></label><label>Demo password<input name="password" type="password" autocomplete="off" value="HF-Demo-2026!" required maxlength="128"></label><button class="primary">Sign in to demo <span aria-hidden="true">→</span></button></form>
+  <p id="login-error" class="error" role="alert"></p><p class="demo-credentials">Demo password for all five roles: <strong>HF-Demo-2026!</strong></p><p class="small">These are public test accounts. Do not use your real academy or ATS password. Demo role checks are not secure access control. Nothing syncs to another device.</p>
+ </div></section>
 </div>
 <div id="workspace" class="workspace" hidden>
- <aside class="sidebar"><div class="brand"><span class="monogram">HF</span><span>TRAINING</span></div><p class="nav-caption">YOUR WORKSPACE</p><nav id="nav" aria-label="Main navigation"></nav><div class="sidebar-bottom"><strong>Hairforce1</strong><span>Training Academy</span><span class="small">Learn with purpose.</span></div></aside>
+ <aside class="sidebar"><div class="brand"><span class="monogram">HF</span><span>TRAINING</span></div><p class="nav-caption">ACADEMY WORKSPACE</p><nav id="nav" aria-label="Main navigation"></nav><div class="sidebar-bottom"><strong>Hairforce1</strong><span>Training Academy</span><span class="small">Barbering education</span><a class="sidebar-help" href="./READ-ME-FIRST.html" target="_blank" rel="noopener">Demo help ↗</a></div></aside>
  <div class="main-shell"><header class="topbar"><span id="breadcrumb">Learning workspace</span><div class="identity"><span id="identity"></span><button id="logout" class="quiet">Sign out</button></div></header><main><div id="learner-picker"></div><div id="content"></div></main></div>
 </div>
 <div id="toast" role="status" aria-live="polite" hidden></div>

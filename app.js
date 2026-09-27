@@ -1,13 +1,31 @@
 import {state,$,api,esc,label,field,title,formData,bindForm,toast} from './ui.js';
 import {renderLearning} from './learning.js';
 import {renderAdmin} from './admin.js';
+import {DEMO_PASSWORD,resetDemo,saveDownload} from './demo-store.js';
 
-const navigation=[['dashboard','01','Overview'],['portfolio','02','E-portfolio'],['assessment','03','Assessment & IQA'],['attendance','04','Attendance'],['hours','05','Learning hours'],['reviews','06','Progress reviews'],['exams','07','Exam results'],['resources','08','Resources'],['admin','08','Administration'],['account','09','My account']];
+const navigation=[['dashboard','01','Overview'],['portfolio','02','E-portfolio'],['assessment','03','Assessment & IQA'],['attendance','04','Attendance'],['hours','05','Learning hours'],['reviews','06','Progress reviews'],['exams','07','Exam results'],['resources','08','Resources'],['admin','09','Administration'],['account','10','My account']];
 $('#close-modal').addEventListener('click',()=>$('#modal').close());
 $('#logout').addEventListener('click',async()=>{try{await api('/api/logout','POST',{});location.reload();}catch(e){toast(e.message);}});
 bindForm('login-form',async form=>{
  $('#login-error').textContent='';
  try{await api('/api/login','POST',formData(form));form.reset();await boot();}catch(e){$('#login-error').textContent=e.message;}
+});
+
+document.querySelectorAll('[data-demo-role]').forEach(button=>button.addEventListener('click',()=>{
+ $('#login-form [name=email]').value=button.dataset.demoRole+'@demo.invalid';
+ $('#login-form [name=password]').value=DEMO_PASSWORD;
+ $('#login-form').requestSubmit();
+}));
+$('#reset-demo').addEventListener('click',async()=>{
+ if(!confirm('Reset this GitHub demo in this browser? This permanently removes its test records and sample files. Your old HF app data is not touched.'))return;
+ try{await resetDemo();location.reload();}catch(e){toast(e.message);}
+});
+document.addEventListener('click',async event=>{
+ const link=event.target.closest('[data-file],[data-export]');if(!link)return;event.preventDefault();
+ try{
+  if(link.dataset.file){const f=await api(`/api/files/${link.dataset.file}`);saveDownload(f.blob,f.filename);}
+  else{const records=await api(`/api/learners/${link.dataset.export}/export`);saveDownload(new Blob([JSON.stringify(records,null,2)],{type:'application/json'}),`HF-demo-learner-${link.dataset.export}.json`);}
+ }catch(e){toast(e.message);}
 });
 
 async function boot(){
@@ -28,7 +46,7 @@ function renderNav(){
 async function refresh(){
  if(state.page==='account'){
   $('#learner-picker').innerHTML='';
-  $('#content').innerHTML=title('My account','Keep your sign-in details private.')+`<section class="card">${state.user.must_change?'<p class="notice">Please replace your temporary password before using the learning workspace.</p>':''}<form id="password-form">${field('current_password','Current password','password')}${field('new_password','New passphrase (14–128 characters)','password')}<button class="primary">Change password & sign out</button></form></section>`;
+  $('#content').innerHTML=title('My demo account','Test account settings in this browser only.')+`<section class="notice warning">This is a public demonstration, not secure account hosting. Never enter a real password. Reset demo restores the public test logins and deletes local test records.</section><section class="card">${state.user.must_change?'<p class="notice">Replace your temporary test password before continuing.</p>':''}<form id="password-form">${field('current_password','Current test password','password')}${field('new_password','New test passphrase (14–128 characters)','password')}<button class="primary">Change test password & sign out</button></form></section>`;
   $('#password-form [name=current_password]').autocomplete='current-password';$('#password-form [name=new_password]').autocomplete='new-password';
   bindForm('password-form',async form=>{await api('/api/password','POST',formData(form));location.reload();});return;
  }
@@ -43,4 +61,4 @@ async function refresh(){
  renderLearning(refresh);
 }
 
-boot().catch(()=>{$('#workspace').hidden=true;$('#login').hidden=false;});
+boot().catch(error=>{$('#workspace').hidden=true;$('#login').hidden=false;if(error.message!=='Please sign in to the demo.')$('#login-error').textContent=error.message;});

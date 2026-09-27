@@ -1,127 +1,125 @@
-# HF Training v3 — academy pilot
+# HF Training — GitHub Pages testing version
 
-A complete replacement source pack for a NEW repository and NEW database. All connected files are included; the pack reuses the prior authentication and administration foundation and extends the assessment workflows. It is not a line-for-line rewrite and is not a production-certified VLE.
+Prepared for Hairforce1 Training Academy. This version runs directly on GitHub Pages in Chrome, including on a Chromebook. No Python, terminal, server account or build step is needed to use it.
 
-## Start on a computer
+Open **READ-ME-FIRST.html** for the illustrated setup guide and demo login details.
 
-Install Python 3.11 or newer. Extract this pack. Open a terminal in the folder containing `manage.py`.
+## What to upload
 
-```sh
-python -m venv .venv
+Extract this ZIP. Inside `HF-Training-GitHub-Demo`, upload the files and the complete `hf-demo` folder to the top level of your GitHub repository. Do not upload the outer folder itself and do not upload the ZIP.
+
+The repository must contain:
+
+```text
+index.html
+hf-demo/
+    app.js
+    ui.js
+    styles.css
+    demo-store.js
+    unit-outlines.js
+    learning.js
+    portfolio.js
+    admin.js
+READ-ME-FIRST.html
+README.md
 ```
 
-Activate the environment:
+The preview PNGs and TEST-RESULTS.md can also be uploaded. They are documentation, not required for sign-in. The included `.nojekyll` file can be included if your file browser shows it; this app does not require a build tool.
 
-- Windows PowerShell: `.venv\Scripts\Activate.ps1`
-- macOS/Linux: `source .venv/bin/activate`
+If using the same repository as the earlier pack, **replace its root `index.html`** with this one and add the `hf-demo` folder. The older `hf`, `static`, Python files and setup files are not used by this demo. You do not need to delete them to make this work. Keep them until you have a backup and have confirmed the demo works. No automatic migration or deletion of old records is performed.
 
-```sh
-python -m pip install -r requirements.txt
-```
+If GitHub has `index.md` or `README.md` but no root `index.html`, it may display a document instead of the app. Ensure this pack's `index.html` is at the top level.
 
-### Fictional demonstration (recommended first)
+## GitHub Pages settings
 
-Set a NEW demonstration directory and enable local HTTP:
+In the repository, choose **Settings → Pages**:
 
-Windows PowerShell:
-```powershell
-$env:HF_DATA_DIR = "$PWD/demo-instance"
-$env:HF_LOCAL_HTTP = "1"
-```
+- Source: **Deploy from a branch**.
+- Branch: the branch containing these files, normally **main**.
+- Folder: **/(root)**.
+- Select **Save** and wait for the deployment to finish. Use the published address shown in Pages settings.
 
-macOS/Linux:
-```sh
-export HF_DATA_DIR="$PWD/demo-instance"
-export HF_LOCAL_HTTP=1
-```
+Your screenshot showed `https://hf-training-1.github.io/HF-Training-1/`. If that is still the chosen repository, use that address after uploading. No remote changes or deployment have been made by this code pack.
 
-```sh
-python demo.py
-python manage.py serve
-```
+If you still see the old screen, use **Ctrl + Shift + R** on your Chromebook to refresh the published page. You should see **TESTING VERSION** across the top and buttons for Administrator, VRQ student, Assessor, IQA and Apprentice.
 
-Choose your own demo passphrase when prompted; it is never included in this pack. Visit http://127.0.0.1:8000. The four fictional account addresses are `admin@demo.invalid`, `learner@demo.invalid`, `assessor@demo.invalid` and `iqa@demo.invalid`. They share the passphrase you choose for demonstration ONLY. Demo setup refuses to alter a non-empty database. Do not use real records in this demo.
+GitHub Pages availability depends on your GitHub plan and repository visibility. If private-repository Pages is unavailable, use a separate public repository containing only this demo's code and fictional samples. Do not make an existing repository containing sensitive files public.
 
-### Empty academy installation
+Official Pages setup instructions: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
-Use a different NEW HF_DATA_DIR, then run:
-```sh
-python manage.py init
-python manage.py admin
-python manage.py serve
-```
+## Login
 
-The admin command asks for your name, email and private passphrase. No default administrator key exists. Create learners and staff in Administration, assign staff, check unit content, and enrol each learner on the appropriate course. A newly created user must change their temporary passphrase. An empty course can be assigned but has no assessments until its units are added.
+Click a role button on the sign-in screen for one-click entry, or enter:
 
-## What works
-
-- Administrator, learner, assessor and IQA accounts; staff assignment; private course enrolments.
-- Consultation fields, service notes, learner reflection, academy range descriptors (including short/mid-length/long hair), and criterion checkboxes.
-- Multiple service records per unit, one open draft per unit; private PDF/JPEG/PNG evidence uploads.
-- Separate assessor criterion ticks and written feedback. Learner ticks are not assessor approval.
-- Submitted records lock. Assessors can return work, learners resubmit, and decisions retain snapshots.
-- An IQA can sample assessed work but cannot verify their own assessment.
-- Academy attendance; learning hours split into academy/placement/other and approved separately.
-- Exam attempt/result recording, progress reviews, course resources and JSON record export.
-- Offline backup utility covering the database and uploaded evidence.
-
-## Course content boundaries
-
-The five VRQ identifiers are correctly named against the official City & Guilds 3002 handbook:
-
-| Unit | Title |
+| Role | Email |
 |---|---|
-|202|Follow Health and Safety Practice in the Salon|
-|203|Client Consultation for Hair Services|
-|204|Shampoo and Condition the Hair and Scalp|
-|210|Cut Men's Hair|
-|211|Cut Facial Hair|
+| Administrator | admin@demo.invalid |
+| VRQ student — Alex | learner@demo.invalid |
+| Assessor | assessor@demo.invalid |
+| IQA | iqa@demo.invalid |
+| Apprenticeship student — Jordan | apprentice@demo.invalid |
 
-The included checklists are short CENTRE DRAFT prompts. They are NOT the complete official performance, knowledge or range requirements. Practical descriptors are centre metadata, not a claim that these satisfy an awarding-body range. The academy must map its authorised assessment pack, observation counts, range requirements and knowledge assessment before live sign-off. The exact award earned by the selected-unit programme still needs centre confirmation. No certificate is generated.
+**Password for all five: `HF-Demo-2026!`**
 
-The apprenticeship and VTCT are separate empty course areas. Their precise qualifications and units must be added by the academy. They are not ready for course assessment merely because their menu entries exist.
+These credentials are intentionally public demo credentials. They do not access the old HF app, ATS, or any real student system. Never use a real academy/ATS password here.
 
-The VRQ 18 placement / 6 academy weekly plan is the academy's stated target, not a validated funding rule. The app stores actual submitted/approved activity; it does not automatically classify shadowing as guided learning or statutory off-the-job training. Attendance is not added to learning hours again. Duration and missed-week monitoring remain manual. Exams take place externally; this app records results only.
+The Administrator account opens all demo administration areas. It is not a secure master key. All role checks run in the browser and can be bypassed by someone editing browser code/storage.
 
-Source: https://www.cityandguilds.com/qualifications-and-apprenticeships/hairdressing/hairdressing/3002-hairdressing (Level 2 handbook v3.3, January 2025; consulted 26 September 2026).
+## Try it
 
-## Upload to GitHub
+1. Open the **VRQ student** demo. Go to E-portfolio and open Unit 202 or another unit.
+2. Enter fictional consultation/service notes, reflection and the relevant practical ranges. Save the draft.
+3. Optionally upload a sample PDF, JPG or PNG (5 MB per file, 20 per record, 30 MB total demo file storage).
+4. Click **Save & submit for assessment**. The service objectives, service, what went well and improvement fields are required.
+5. Sign out and choose **Assessor**. Open Assessment & IQA. Tick the demonstrated criteria and record feedback. You can return work for changes or record it as assessed.
+6. Sign out and choose **IQA**. Review assessed work and record independent sampling feedback. The same account cannot assess and IQA the same record.
+7. Try attendance, learning hours, reviews and exam-result recording. These simulate academy workflows; they do not issue qualifications or deliver official exams.
+8. Choose **Apprentice**. Jordan sees only the separate apprenticeship course area; its units are not populated yet. The VRQ units are not in Jordan's view.
 
-1. Create a NEW private repository, for example `HF-Training-v3`.
-2. Upload the CONTENTS of this extracted folder, preserving `hf`, `static`, `tests` and `docs` directories. Upload source files, not the ZIP.
-3. Include `.gitignore` (it may be hidden in your file browser).
-4. Never upload `instance`, `demo-instance`, any data directory, backups, evidence, credentials or `.venv`.
-5. Keep the old project/data unchanged; this version has a different database schema. It is not an in-place v2 migration.
+Multiple service records per unit are supported, with one unfinished draft per learner/unit. Learner ticks and assessor ticks are stored separately. The history retains feedback and the recorded demo actor.
 
-GitHub stores the code. GitHub Pages cannot execute this Python backend. Do not open `static/index.html` directly to test the app; start the server and use its URL.
+In Administration you can create fictional accounts, courses and units, enrol test learners, assign staff, add learning resources, reset test passwords and disable test accounts. A newly created account needs a 14–128 character test passphrase and must change it on first login. Seeded public demo accounts do not require that first-login step.
 
-## Application hosting
+## Included course content
 
-Use a Python host or a Docker host with a persistent private disk. Run `python manage.py init` and `python manage.py admin` against that host's HF_DATA_DIR once, then run:
+- VRQ: five unit outlines carried over from the revised pack — **202, 203, 204, 210 and 211**.
+- City & Guilds Level 2 Barbering Apprenticeship: separate empty course area.
+- VTCT Barbering: separate empty course area.
 
-```sh
-waitress-serve --listen=0.0.0.0:8000 wsgi:app
-```
+The VRQ titles in the revised source pack are: Follow Health and Safety Practice in the Salon; Client Consultation for Hair Services; Shampoo and Condition the Hair and Scalp; Cut Men's Hair; Cut Facial Hair. Checklists are **centre draft prompts**, not the full official performance, knowledge or range requirements. The hair-length and texture checkboxes are practical descriptors for testing. They do not establish qualification completion.
 
-Put a trusted HTTPS reverse proxy in front of it, terminate TLS there, restrict direct access to the backend, apply login rate limiting and request size limits, and do NOT set HF_LOCAL_HTTP=1 in production. HF_DATA_DIR must point to persistent storage shared by this single application instance. SQLite here is designed for a small single-instance pilot; do not deploy multiple independent instances with divergent disks.
+## Where demo data goes
 
-The included Dockerfile is an optional packaging route. It does not provision hosting, HTTPS, a domain or backups. No deployment has been performed for you.
+Demo records and sample file bytes are stored in IndexedDB in **this browser on this device**. Login selection is stored in this tab's session storage. Different devices/browsers have separate, independent demos. Sign out and switch roles in the same browser to test the complete workflow.
 
-## Backup and restore
+Refreshing the page keeps the demo records under normal browser settings. Clearing site data, browser storage removal, private browsing, changing device/profile, or changing the website's path can make them unavailable. This is not a backup service.
 
-Stop the app before backup:
-```sh
-python backup.py /secure/path/hf-backup.zip --app-stopped
-```
+**Reset demo** deletes only this version's demo store at its current website path and restores the fictional starter accounts. It does not call `localStorage.clear()` or delete the original HF app's localStorage. Reset permanently removes this demo's test records and attachments in the current browser.
 
-Use a new destination outside HF_DATA_DIR. Backups contain private records. Store securely and never upload to a public repository.
+**Download learner record (JSON)** exports one learner's visible records and attachment metadata. Download each sample attachment separately if you want to keep it. No import/restore function is supplied.
 
-For a restore rehearsal: stop the app, preserve the old data directory, extract a trusted backup into a NEW empty private directory, verify each file against `manifest.json` SHA-256 values, point HF_DATA_DIR to that directory, and start the same v3 code. Verify accounts, record counts and an evidence download before switching. Treat sessions in a restored database as sensitive; expire them with `DELETE FROM sessions` using a local SQLite operator tool before exposing the restored service. Automated encrypted scheduled backups and full live-host restore acceptance remain deployment work.
+## What this version is and is not
 
-## Testing and limitations
+This is a working browser-only demonstration for exploring the design and workflows on GitHub Pages. It is not the server-backed v3 application, and it is not a live or secure multi-user VLE. Do not enter real learner names, client images, safeguarding information, health records or real passwords.
 
-```sh
-python -m unittest discover -s tests -v
-```
+No background server, database subscription or Python installation is involved. The internal `/api/...` strings are local function routes; they are not network requests to a server. There is no cross-device sharing, email, cloud backup, protected authentication, immutable audit log, official qualification result or ATS integration.
 
-See docs/VALIDATION.md for observed results and docs/PILOT-CHECKLIST.md for acceptance steps. Dashboard percentage is assessed SERVICE RECORDS, not complete units, range coverage or qualification achievement. There is no automatic ATS integration, awarding-body certification, funding eligibility engine, multi-college tenancy, bulk import, email notifications, MFA or email password recovery. Operator/admin password reset exists. Upload content scanning, security/privacy review and mobile/browser acceptance are launch gates for real learner use.
+For live learner use later, retain the front-end design and connect it to independently reviewed server-side authentication, data storage and file permissions. No external account is required for testing this pack.
+
+## Why the earlier page looked plain
+
+The published page referenced styling and scripts under `/static/...`, which resolved outside your GitHub repository path and were not available. It also expected a Python backend. This pack uses relative `./hf-demo/...` paths and replaces backend calls with an explicitly labelled local demo store.
+
+Do not fix the old version just by changing the stylesheet path and assume its login is working. Upload this complete connected demo pack instead.
+
+## Troubleshooting
+
+- **Plain text / no blue styling:** confirm `hf-demo/styles.css` exists directly under the repository's `hf-demo` folder and the root `index.html` is this version.
+- **Old wording / no role buttons:** replace the root `index.html`, wait for Pages deployment and hard-refresh.
+- **Role buttons do nothing:** confirm all eight JavaScript/CSS files listed above are present with exact names. Open the GitHub Pages HTTPS address, not an HTML preview inside GitHub or the ZIP.
+- **Login fails after changing a test password:** enter your changed test password, or use Reset demo if you no longer need the local test records.
+- **Storage error:** use a normal Chrome profile with site storage enabled and sufficient free space. On a managed Chromebook, school/work policies may restrict browser storage; ask its administrator if blocked.
+- **Another device cannot see your changes:** that is expected in this browser-only demo.
+
+See TEST-RESULTS.md for the checks actually performed.

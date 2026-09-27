@@ -1,3 +1,4 @@
+import {demoRequest} from './demo-store.js';
 export const state={user:null,csrf:'',learners:[],lid:null,data:null,page:'dashboard',admin:null};
 export const $=(s)=>document.querySelector(s);
 export const esc=(value)=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -14,15 +15,8 @@ export const title=(heading,subtitle)=>`<div class="page-title"><div><h1>${esc(h
 export const table=(heads,body)=>`<div class="table-scroll"><table><thead><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body||`<tr><td colspan="${heads.length}">No records yet.</td></tr>`}</tbody></table></div>`;
 let toastTimer;
 export function toast(message){$('#toast').textContent=message;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,6500);}
-export async function api(path,method='GET',body){
- const options={method,headers:{},credentials:'same-origin'};
- if(method!=='GET')options.headers['X-CSRF-Token']=state.csrf;
- if(body instanceof FormData){options.body=body;}else if(body!==undefined){options.headers['Content-Type']='application/json';options.body=JSON.stringify(body);}
- const response=await fetch(path,options);
- const data=await response.json();
- if(!response.ok)throw new Error(data.error||'Request failed. Please try again.');
- return data;
-}
+export const api=demoRequest;
+
 export function bindForm(id,handler){
  const form=document.getElementById(id);if(!form)return;
  form.addEventListener('submit',async event=>{event.preventDefault();const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
